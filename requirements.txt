@@ -1,0 +1,4 @@
+taipy
+requests
+google-cloud-bigquery
+python-dotenv
