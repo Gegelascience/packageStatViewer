@@ -1,16 +1,25 @@
-from taipy.gui import Markdown 
+from taipy.gui import Markdown
 import requests
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta,date
 
-package = "ngx-view360"
+# page state
+packageNpm = ""
+dataNpm = {
+    "day":[],
+    "downloads":[]
+}
+datesNPM = [(datetime.now() - timedelta(days=7)).date(), datetime.now().date()]
 
 def change_input(state):
-    state.data = getLast7daysDownloadPackage(state.package)
+    if state.packageNpm and len(state.packageNpm) > 0:
+        state.dataNpm = getTimedDownloadPackage(state.packageNpm, state.datesNPM[0], state.datesNPM[1])
 
-def getLast7daysDownloadPackage(packageName:str)->list:
-    now = datetime.now()
-    SevenDaysAgo =now - timedelta(days=7)
-    responseApi = requests.get("https://api.npmjs.org/downloads/range/" + SevenDaysAgo.strftime("%Y-%m-%d") + ":" + now.strftime("%Y-%m-%d") + "/" + packageName)
+
+def getTimedDownloadPackage(packageName:str,startDate:date, endDate:date)->list:
+    endTime = datetime.combine(endDate, datetime.min.time())
+    startTime = datetime.combine(startDate, datetime.min.time())
+
+    responseApi = requests.get("https://api.npmjs.org/downloads/range/" + startTime.strftime("%Y-%m-%d") + ":" + endTime.strftime("%Y-%m-%d") + "/" + packageName)
     if responseApi.status_code == 200:
         try:
             possibleData = responseApi.json()
@@ -22,27 +31,25 @@ def getLast7daysDownloadPackage(packageName:str)->list:
                     "downloads":[d.get("downloads") for d in possibleData.get("downloads",[])]
                 }
                 
-                
-                #print(dataForChart)
-                
                 return dataForChart
             else:
-                return []
+                return {"day":[],"downloads":[]}
 
         except Exception as e:
             print(e)
-            return []
+            return {"day":[],"downloads":[]}
     else:
-        return []
+        return {"day":[],"downloads":[]}
 
-data = getLast7daysDownloadPackage(package)
+
 
 pageNpm = Markdown("""
 # Stats *NPM*
 
-Value: <|{package}|text|>
+<|{packageNpm}|input|label=NPM Package|>
+<|{datesNPM}|date_range|label_start=Start Date|label_end=End Date|>
+<|Show Stats|button|on_action=change_input|>
 
-<|{package}|input|on_change=change_input|>
-
-<|{data}|chart|x=day|y=downloads|>
+<|{dataNpm}|chart|x=day|y=downloads|>
+<|{dataNpm}|table|>
 """)

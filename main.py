@@ -23,5 +23,5 @@ if __name__ == "__main__":
     
     guiApp =Gui(pages=pages)
 
-    guiApp.run(title="Infos packages")
+    guiApp.run(title="Infos packages",use_reloader=True)
     
