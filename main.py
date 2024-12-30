@@ -1,18 +1,19 @@
-from taipy.gui import Gui
+from taipy.gui import Gui, Markdown
 
 from pages.chartNpm.chartNpm import pageNpm_md
 from pages.chartPypi.chartPypi import pagePypi_md
+from pages.home.home import home_md
 
 root = """
 <|navbar|>
 <|content|>
 """
 
-explication = "## This is an app with taipy"
+
 
 pages = {
     "/":root,
-    "home":explication,
+    "home":home_md,
     "NPM": pageNpm_md,
     "Pypi": pagePypi_md
 }
