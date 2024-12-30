@@ -1,26 +1,44 @@
 import os
+from datetime import date
 from google.cloud import bigquery
 from dotenv import load_dotenv
 load_dotenv()
 
 client = bigquery.Client(os.getenv("projectGooglCloud"))
 
-def getLast7daysDownloadPackage(packageName:str)->list:
-    print(packageName)
+
+def getPackagesVersionsList(packageName:str):
+    try:
+        queryStr = """
+        SELECT FROM
+        
+        """
+    except:
+        pass
+
+def getTimedDownloadPackage(packageName:str, dateStart:date,dateEnd:date)->dict:
+    print(packageName)    
 
     try:
+
         queryStr = """
             SELECT
             COUNT(*) AS num_downloads,
             DATE_TRUNC(DATE(timestamp), DAY) AS `day`
             FROM `bigquery-public-data.pypi.file_downloads`
             WHERE file.project = '{package}'
-            AND DATE(timestamp)
-            BETWEEN DATE_TRUNC(DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY), DAY)
-            AND CURRENT_DATE()
+            AND DATE(timestamp) BETWEEN  DATE({yearStart},{monthStart},{dayStart}) and DATE({yearEnd},{monthEnd},{dayEnd})
             GROUP BY `day`
             ORDER BY `day` DESC
-            """.format(package=packageName)
+            """.format(
+                package=packageName,
+                yearStart=dateStart.year,
+                monthStart=dateStart.month,
+                dayStart=dateStart.day,
+                yearEnd=dateEnd.year,
+                monthEnd=dateEnd.month,
+                dayEnd=dateEnd.day
+                )
 
 
 
@@ -51,5 +69,5 @@ def getLast7daysDownloadPackage(packageName:str)->list:
             print("ko")
             return {"day":[],"downloads":[]}
     except Exception as e:
-        print("exception")
+        print("exception",e)
         return {"day":[],"downloads":[]}

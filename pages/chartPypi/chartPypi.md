@@ -1,6 +1,7 @@
 # Stats *Pypi*
 
 <|{packagePypi}|input|label=Package|>
+<|{datesPypi}|date_range|label_start=Start Date|label_end=End Date|>
 <|Show Stats|button|on_action=change_input|>
 
 
