@@ -6,6 +6,7 @@ def getTimedDownloadPackage(packageName:str,startDate:date, endDate:date)->list:
     startTime = datetime.combine(startDate, datetime.min.time())
 
     responseApi = requests.get("https://api.npmjs.org/downloads/range/" + startTime.strftime("%Y-%m-%d") + ":" + endTime.strftime("%Y-%m-%d") + "/" + packageName)
+    print("https://api.npmjs.org/downloads/range/" + startTime.strftime("%Y-%m-%d") + ":" + endTime.strftime("%Y-%m-%d") + "/" + packageName)
     if responseApi.status_code == 200:
         try:
             possibleData = responseApi.json()

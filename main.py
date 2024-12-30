@@ -1,7 +1,7 @@
 from taipy.gui import Gui
 
-from pages.chartNpm import pageNpm
-#from pages.chartPypi import pagePypi
+from pages.chartNpm.chartNpm import pageNpm_md
+from pages.chartPypi.chartPypi import pagePypi_md
 
 root = """
 <|navbar|>
@@ -13,8 +13,8 @@ explication = "## This is an app with taipy"
 pages = {
     "/":root,
     "home":explication,
-    "NPM": pageNpm,
-#    "Pypi": pagePypi
+    "NPM": pageNpm_md,
+    "Pypi": pagePypi_md
 }
 
 

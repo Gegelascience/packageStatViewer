@@ -9,7 +9,7 @@ versionsNpm = {
      "npm":[],
      "node":[]
 }
-dataNpm = {
+dataDownloadNpm = {
     "day":[],
     "downloads":[]
 }
@@ -19,7 +19,7 @@ def change_input(state):
     if state.packageNpm and len(state.packageNpm) > 0:
         infoPackage =npmApiHelper.getPackageInfos(state.packageNpm)
         state.versionsNpm = formatNpmVersionTable(infoPackage.get("versions",{}))
-        state.dataNpm = npmApiHelper.getTimedDownloadPackage(state.packageNpm, state.datesNPM[0], state.datesNPM[1])
+        state.dataDownloadNpm = npmApiHelper.getTimedDownloadPackage(state.packageNpm, state.datesNPM[0], state.datesNPM[1])
 
     
 def formatNpmVersionTable(dataVersions:dict):
@@ -33,6 +33,7 @@ def formatNpmVersionTable(dataVersions:dict):
                 "npm":[dataVersions[v].get("_npmVersion","") for v in dataVersions.keys()],
                 "node":[dataVersions[v].get("_nodeVersion","") for v in dataVersions.keys()]
             }
+
         
             return versionsNpm
         return {"version":[],"npm":[],"node":[]}
@@ -50,17 +51,4 @@ layoutNpm = {
 }
 
 
-pageNpm = Markdown("""
-# Stats *NPM*
-
-<|{packageNpm}|input|label=NPM Package|>
-<|{datesNPM}|date_range|label_start=Start Date|label_end=End Date|>
-<|Show Stats|button|on_action=change_input|>
-
-                   
-<|## Package: {packageNpm}|text|mode=markdown|>
-
-### _Downloads_
-<|{dataNpm}|chart|x=day|y=downloads|layout={layoutNpm}|>
-<|{versionsNpm}|table|>
-""")
+pageNpm_md = Markdown("chartNpm.md")
