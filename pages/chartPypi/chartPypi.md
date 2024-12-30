@@ -9,3 +9,4 @@
 
 ### _Downloads_
 <|{dataPypi}|chart|x=day|y=downloads|>
+<|{versionsPypi}|table|>

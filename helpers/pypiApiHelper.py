@@ -10,11 +10,19 @@ client = bigquery.Client(os.getenv("projectGooglCloud"))
 def getPackagesVersionsList(packageName:str):
     try:
         queryStr = """
-        SELECT FROM
-        
-        """
-    except:
-        pass
+        SELECT * FROM `bigquery-public-data.pypi.distribution_metadata` WHERE file.project = '{packageName}'
+        """.format(packageName=packageName)
+        query_job = client.query(queryStr)
+        results = query_job.result()
+        listVersions = []
+        listPythonVersion = []
+        for row in results:
+            listVersions.append(row["file.version"])
+            listPythonVersion.append(row["details.python"])
+        return {"version":listVersions,"python":listPythonVersion}
+    except Exception as e:
+        print(e)
+        return {"version":[],"python":[]}
 
 def getTimedDownloadPackage(packageName:str, dateStart:date,dateEnd:date)->dict:
     print(packageName)    
