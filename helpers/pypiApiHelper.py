@@ -10,7 +10,7 @@ client = bigquery.Client(os.getenv("projectGooglCloud"))
 def getPackagesVersionsList(packageName:str):
     try:
         queryStr = """
-        SELECT * FROM `bigquery-public-data.pypi.distribution_metadata` WHERE file.project = '{packageName}'
+        SELECT * FROM `bigquery-public-data.pypi.file_downloads` WHERE file.project = '{packageName}'
         """.format(packageName=packageName)
         query_job = client.query(queryStr)
         results = query_job.result()
